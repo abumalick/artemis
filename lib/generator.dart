@@ -235,55 +235,7 @@ Make sure your query is correct and your schema is updated.''');
         alias: aliasAsClassName,
       ),
     );
-  }
-
-  // On custom scalars
-  String annotation;
-  if (nextType is ScalarTypeDefinitionNode) {
-    final scalar = gql.getSingleScalarMap(options.options, nextType.name.value);
-
-    if (scalar.customParserImport != null &&
-        nextType is ScalarTypeDefinitionNode &&
-        nextType.name.value == scalar.graphQLType) {
-      final graphqlTypeSafeStr = gql
-          .buildTypeString(fieldType as TypeNode, options.options,
-              dartType: false, schema: options.schema)
-          .replaceAll(RegExp(r'[<>]'), '');
-      final dartTypeSafeStr = dartTypeStr.replaceAll(RegExp(r'[<>]'), '');
-      annotation =
-          'JsonKey(fromJson: fromGraphQL${dartTypeStr}ToDart$dartTypeSafeStr, toJson: fromDart${dartTypeSafeStr}ToGraphQL$graphqlTypeSafeStr)';
-    }
-  } // On enums
-  else if (nextType is EnumTypeDefinitionNode) {
-    _generateEnumForType(
-      context.nextTypeWithSamePath(
-        nextType: nextType,
-        alias: aliasAsClassName,
-      ),
-      options,
-    );
-    if (fieldType is! ListTypeNode) {
-      annotation = 'JsonKey(unknownEnumValue: $dartTypeStr.$ARTEMIS_UNKNOWN)';
-    }
-  }
-
-  return ClassProperty(
-    type: dartTypeStr,
-    name: fieldAlias ?? fieldName,
-    annotation: annotation,
-    isNonNull: (fieldType as TypeNode).isNonNull,
-  );
-}
-
-void _generateEnumForType(Context context, InjectedOptions options) {
-  final enumType = context.currentType as EnumTypeDefinitionNode;
-
-  _log('<- Generated enum ${context.joinedName()}', 0);
-  context.generatedClasses.add(
-    EnumDefinition(
-      name: context.joinedName(),
-      values: enumType.values.map((eV) => eV.name.value).toList()
-        ..add(ARTEMIS_UNKNOWN),
+mMW
     ),
   );
 }
